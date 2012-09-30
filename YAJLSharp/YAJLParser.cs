@@ -30,7 +30,6 @@ namespace YAJLSharp
 		public uint validateUTF8;
 
 		public yajl_alloc_funcs *alloc;
-		// todo
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -47,7 +46,6 @@ namespace YAJLSharp
 		public IntPtr size;
 		public IntPtr used;
 		public yajl_alloc_funcs *yaf;
-		// todo
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
