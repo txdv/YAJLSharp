@@ -240,7 +240,14 @@ namespace YAJLSharp
 
 		protected bool IsOverriden(string name, Type baseType)
 		{
-			var mi = baseType.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly);
+			return IsOverriden(name,
+			                   baseType.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly),
+			                   baseType);
+
+		}
+
+		protected bool IsOverriden(string name, MethodInfo mi, Type baseType)
+		{
 			for (Type type = this.GetType(); type != baseType; type = type.BaseType) {
 				if (IsOverriden(name, type, mi)) {
 					return true;
