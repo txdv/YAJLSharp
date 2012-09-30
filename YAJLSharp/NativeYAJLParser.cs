@@ -235,17 +235,39 @@ namespace YAJLSharp
 
 		bool IsOverriden(string name)
 		{
-			for (Type type = this.GetType(); type != typeof(NativeYAJLParser); type = type.BaseType) {
-				if (IsOverriden(type, name)) {
+			return IsOverriden(name, typeof(NativeYAJLParser));
+		}
+
+		protected bool IsOverriden(string name, Type baseType)
+		{
+			var mi = baseType.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly);
+			for (Type type = this.GetType(); type != baseType; type = type.BaseType) {
+				if (IsOverriden(name, type, mi)) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		bool IsOverriden(Type type, string name)
+		protected bool IsOverriden(string name, Type type, MethodInfo mi)
 		{
-			return type.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly) != null;
+			var methods = type.GetMethods(BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly);
+			foreach (var method in methods) {
+				if (method.Name == name && mi.ReturnParameter.ParameterType == method.ReturnParameter.ParameterType) {
+					var p1 = method.GetParameters();
+					var p2 = mi.GetParameters();
+					if (p1.Length != p2.Length) {
+						continue;
+					}
+					for (int i = 0; i < p1.Length; i++) {
+						if (p1[i].ParameterType != p2[i].ParameterType) {
+							continue;
+						}
+					}
+					return true;
+				}
+			}
+			return false;
 		}
 
 		protected virtual bool Null()
