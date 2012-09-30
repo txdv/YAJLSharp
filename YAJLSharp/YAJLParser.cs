@@ -216,6 +216,11 @@ namespace YAJLSharp
 			return type.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly) != null;
 		}
 
+		// two variables used in order to save the
+		// arguments for the base arguments (Number, String, Key)
+		IntPtr tmp1;
+		IntPtr tmp2;
+
 		protected virtual bool Null()
 		{
 			if (base_callbacks.yajl_null != null) {
@@ -268,30 +273,34 @@ namespace YAJLSharp
 			return Double(doubleVal) ? 1 : 0;
 		}
 
-		protected virtual bool Number(IntPtr numberVal, IntPtr numberLen)
+		protected virtual bool Number(string value)
 		{
 			if (base_callbacks.yajl_number != null) {
-				return base_callbacks.yajl_number(Context, numberVal, numberLen) == 0 ? false : true;
+				return base_callbacks.yajl_number(Context, tmp1, tmp2) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_number(IntPtr ctx, IntPtr numberVal, IntPtr numberLen)
 		{
 			Context = ctx;
-			return Number(numberVal, numberLen) ? 1 : 0;
+			tmp1 = numberVal;
+			tmp2 = numberLen;
+			return Number(Marshal.PtrToStringAuto(numberVal, numberLen.ToInt32())) ? 1 : 0;
 		}
 
-		protected virtual bool String(IntPtr stringVal, IntPtr stringLen)
+		protected virtual bool String(string value)
 		{
 			if (base_callbacks.yajl_string != null) {
-				return base_callbacks.yajl_string(Context, stringVal, stringLen) == 0 ? false : true;
+				return base_callbacks.yajl_string(Context, tmp1, tmp2) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_string(IntPtr ctx, IntPtr stringVal, IntPtr stringLen)
 		{
 			Context = ctx;
-			return String(stringVal, stringLen) ? 1 : 0;
+			tmp1 = stringVal;
+			tmp2 = stringLen;
+			return String(Marshal.PtrToStringAuto(stringVal, stringLen.ToInt32())) ? 1 : 0;
 		}
 
 		protected virtual bool StartMap()
@@ -307,17 +316,19 @@ namespace YAJLSharp
 			return StartMap() ? 1 : 0;
 		}
 
-		protected virtual bool MapKey(IntPtr key, IntPtr length)
+		protected virtual bool MapKey(string key)
 		{
 			if (base_callbacks.yajl_map_key != null) {
-				return base_callbacks.yajl_map_key(Context, key, length) == 0 ? false : true;
+				return base_callbacks.yajl_map_key(Context, tmp1, tmp2) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_map_key(IntPtr ctx, IntPtr key, IntPtr keyLen)
 		{
 			Context = ctx;
-			return MapKey(key, keyLen) ? 1 : 0;
+			tmp1 = key;
+			tmp2 = keyLen;
+			return MapKey(Marshal.PtrToStringAuto(key, keyLen.ToInt32())) ? 1 : 0;
 		}
 
 		protected virtual bool EndMap()

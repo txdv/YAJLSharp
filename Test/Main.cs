@@ -11,15 +11,15 @@ namespace Test
 			return true;
 		}
 
-		protected override bool Number(IntPtr numberVal, IntPtr numberLen)
+		protected override bool Number(string value)
 		{
-			Console.WriteLine("Number");
+			Console.WriteLine("Number {0}", value);
 			return true;
 		}
 
-		protected override bool String(IntPtr stringVal, IntPtr stringLen)
+		protected override bool String(string value)
 		{
-			Console.WriteLine("String");
+			Console.WriteLine("String: {0}", value);
 			return true;
 		}
 
@@ -47,9 +47,9 @@ namespace Test
 			return true;
 		}
 
-		protected override bool MapKey(IntPtr key, IntPtr length)
+		protected override bool MapKey(string key)
 		{
-			Console.WriteLine("MapKey");
+			Console.WriteLine("MapKey: {0}", key);
 			return true;
 		}
 
