@@ -110,6 +110,7 @@ namespace YAJLSharp
 	abstract unsafe public class YAJLParser
 	{
 		public IntPtr Handle { get; protected set; }
+		public IntPtr Context { get; protected set; }
 
 		[DllImport("yajl")]
 		static extern IntPtr yajl_alloc(IntPtr callbacks, IntPtr allocationFunctions, IntPtr ctx);
@@ -215,136 +216,147 @@ namespace YAJLSharp
 			return type.GetMethod(name, BindingFlags.NonPublic|BindingFlags.Instance|BindingFlags.DeclaredOnly) != null;
 		}
 
-		protected virtual bool Null(IntPtr ctx)
+		protected virtual bool Null()
 		{
 			if (base_callbacks.yajl_null != null) {
-				return base_callbacks.yajl_null(ctx) == 0 ? false : true;;
+				return base_callbacks.yajl_null(Context) == 0 ? false : true;;
 			}
 			return true;
 		}
 		int yajl_null(IntPtr ctx)
 		{
-			return Null(ctx) ? 1 : 0;
+			Context = ctx;
+			return Null() ? 1 : 0;
 		}
 
-		protected virtual bool Boolean(IntPtr ctx, bool value)
+		protected virtual bool Boolean(bool value)
 		{
 			if (base_callbacks.yajl_boolean != null) {
-				return base_callbacks.yajl_boolean(ctx, (value ? 1 : 0)) == 0 ? false : true;;
+				return base_callbacks.yajl_boolean(Context, (value ? 1 : 0)) == 0 ? false : true;;
 			}
 			return true;
 		}
 		int yajl_boolean(IntPtr ctx, int boolVal)
 		{
-			return Boolean(ctx, (boolVal == 0 ? false : true)) ? 1 : 0;
+			Context = ctx;
+			return Boolean((boolVal == 0 ? false : true)) ? 1 : 0;
 		}
 
-		protected virtual bool Integer(IntPtr ctx, long value)
+		protected virtual bool Integer(long value)
 		{
 			if (base_callbacks.yajl_integer != null) {
-				return base_callbacks.yajl_integer(ctx, value) == 0 ? false : true;
+				return base_callbacks.yajl_integer(Context, value) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_integer(IntPtr ctx, long integerVal)
 		{
-			return Integer(ctx, integerVal) ? 1 : 0;
+			Context = ctx;
+			return Integer(integerVal) ? 1 : 0;
 		}
 
-		protected virtual bool Double(IntPtr ctx, double value)
+		protected virtual bool Double(double value)
 		{
 			if (base_callbacks.yajl_double != null) {
-				return base_callbacks.yajl_double(ctx, value) == 0 ? false : true;;
+				return base_callbacks.yajl_double(Context, value) == 0 ? false : true;;
 			}
 			return true;
 		}
 		int yajl_double(IntPtr ctx, double doubleVal)
 		{
-			return Double(ctx, doubleVal) ? 1 : 0;
+			Context = ctx;
+			return Double(doubleVal) ? 1 : 0;
 		}
 
-		protected virtual bool Number(IntPtr ctx, IntPtr numberVal, IntPtr numberLen)
+		protected virtual bool Number(IntPtr numberVal, IntPtr numberLen)
 		{
 			if (base_callbacks.yajl_number != null) {
-				return base_callbacks.yajl_number(ctx, numberVal, numberLen) == 0 ? false : true;
+				return base_callbacks.yajl_number(Context, numberVal, numberLen) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_number(IntPtr ctx, IntPtr numberVal, IntPtr numberLen)
 		{
-			return Number(ctx, numberVal, numberLen) ? 1 : 0;
+			Context = ctx;
+			return Number(numberVal, numberLen) ? 1 : 0;
 		}
 
-		protected virtual bool String(IntPtr ctx, IntPtr stringVal, IntPtr stringLen)
+		protected virtual bool String(IntPtr stringVal, IntPtr stringLen)
 		{
 			if (base_callbacks.yajl_string != null) {
-				return base_callbacks.yajl_string(ctx, stringVal, stringLen) == 0 ? false : true;
+				return base_callbacks.yajl_string(Context, stringVal, stringLen) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_string(IntPtr ctx, IntPtr stringVal, IntPtr stringLen)
 		{
-			return String(ctx, stringVal, stringLen) ? 1 : 0;
+			Context = ctx;
+			return String(stringVal, stringLen) ? 1 : 0;
 		}
 
-		protected virtual bool StartMap(IntPtr ctx)
+		protected virtual bool StartMap()
 		{
 			if (base_callbacks.yajl_start_map != null) {
-				return base_callbacks.yajl_start_map(ctx) == 0 ? false : true;
+				return base_callbacks.yajl_start_map(Context) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_start_map(IntPtr ctx)
 		{
-			return StartMap(ctx) ? 1 : 0;
+			Context = ctx;
+			return StartMap() ? 1 : 0;
 		}
 
-		protected virtual bool MapKey(IntPtr ctx, IntPtr key, IntPtr length)
+		protected virtual bool MapKey(IntPtr key, IntPtr length)
 		{
 			if (base_callbacks.yajl_map_key != null) {
-				return base_callbacks.yajl_map_key(ctx, key, length) == 0 ? false : true;
+				return base_callbacks.yajl_map_key(Context, key, length) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_map_key(IntPtr ctx, IntPtr key, IntPtr keyLen)
 		{
-			return MapKey(ctx, key, keyLen) ? 1 : 0;
+			Context = ctx;
+			return MapKey(key, keyLen) ? 1 : 0;
 		}
 
-		protected virtual bool EndMap(IntPtr ctx)
+		protected virtual bool EndMap()
 		{
 			if (base_callbacks.yajl_end_map != null) {
-				return base_callbacks.yajl_end_map(ctx) == 0 ? false : true;
+				return base_callbacks.yajl_end_map(Context) == 0 ? false : true;
 			}
 			return true;
 		}
 		int yajl_end_map(IntPtr ctx)
 		{
-			return EndMap(ctx) ? 1 : 0;
+			Context = ctx;
+			return EndMap() ? 1 : 0;
 		}
 
-		protected virtual bool StartArray(IntPtr ctx)
+		protected virtual bool StartArray()
 		{
 			if (base_callbacks.yajl_start_array != null) {
-				return base_callbacks.yajl_start_array(ctx) == 0 ? false : true;
+				return base_callbacks.yajl_start_array(Context) == 0 ? false : true;
 			}
 			return true;
 		}
 		int start_array(IntPtr ctx)
 		{
-			return StartArray(ctx) ? 1 : 0;
+			Context = ctx;
+			return StartArray() ? 1 : 0;
 		}
 
-		protected virtual bool EndArray(IntPtr ctx)
+		protected virtual bool EndArray()
 		{
 			if (base_callbacks.yajl_end_array != null) {
-				return base_callbacks.yajl_end_array(ctx) == 0 ? false : true;
+				return base_callbacks.yajl_end_array(Context) == 0 ? false : true;
 			}
 			return true;
 		}
 		int end_array(IntPtr ctx)
 		{
-			return EndArray(ctx) ? 1 : 0;
+			Context = ctx;
+			return EndArray() ? 1 : 0;
 		}
 	}
 }

@@ -5,67 +5,67 @@ namespace Test
 {
 	public class TestParser : YAJLParser
 	{
-		protected override bool Null(IntPtr ctx)
+		protected override bool Null()
 		{
 			Console.WriteLine("Null");
 			return true;
 		}
 
-		protected override bool Number (IntPtr ctx, IntPtr numberVal, IntPtr numberLen)
+		protected override bool Number(IntPtr numberVal, IntPtr numberLen)
 		{
 			Console.WriteLine("Number");
 			return true;
 		}
 
-		protected override bool String(IntPtr ctx, IntPtr stringVal, IntPtr stringLen)
+		protected override bool String(IntPtr stringVal, IntPtr stringLen)
 		{
 			Console.WriteLine("String");
 			return true;
 		}
 
-		protected override bool Integer(IntPtr ctx, long value)
+		protected override bool Integer(long value)
 		{
 			Console.WriteLine("Intger");
 			return true;
 		}
 
-		protected override bool Boolean(IntPtr ctx, bool value)
+		protected override bool Boolean(bool value)
 		{
 			Console.WriteLine("Boolean");
 			return true;
 		}
 
-		protected override bool Double(IntPtr ctx, double value)
+		protected override bool Double(double value)
 		{
 			Console.WriteLine("Double");
 			return true;
 		}
 
-		protected override bool StartMap(IntPtr ctx)
+		protected override bool StartMap()
 		{
 			Console.WriteLine("StartMap");
 			return true;
 		}
 
-		protected override bool MapKey(IntPtr ctx, IntPtr key, IntPtr length)
+		protected override bool MapKey(IntPtr key, IntPtr length)
 		{
 			Console.WriteLine("MapKey");
 			return true;
 		}
 
-		protected override bool EndMap(IntPtr ctx)
+		protected override bool EndMap()
 		{
 			Console.WriteLine("EndMap");
 			return true;
 		}
 
-		protected override bool StartArray(IntPtr ctx)
+		protected override bool StartArray()
 		{
 			Console.WriteLine("StartArray");
 			return true;
 		}
 
-		protected override bool EndArray(IntPtr ctx)
+		protected override bool EndArray()
 		{
 			Console.WriteLine("EndArray");
 			return true;
