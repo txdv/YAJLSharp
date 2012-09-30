@@ -75,8 +75,18 @@ namespace YAJLSharp
 		yajl_sharpcallbacks this_callbacks;
 
 		GCHandle gchandle;
+
+		public YAJLAllocationFunctions AllocationFunctions { get; private set; }
+
 		public NativeYAJLParser()
+			: this(null)
 		{
+		}
+
+		public NativeYAJLParser(YAJLAllocationFunctions allocationFunctions)
+		{
+			AllocationFunctions = allocationFunctions;
+
 			this_callbacks.yajl_null = yajl_null;
 			this_callbacks.yajl_boolean = yajl_boolean;
 			this_callbacks.yajl_integer = yajl_integer;
@@ -94,7 +104,7 @@ namespace YAJLSharp
 			Initialize();
 
 			gchandle = GCHandle.Alloc(callbacks, GCHandleType.Pinned);
-			Handle = yajl_alloc(gchandle.AddrOfPinnedObject(), IntPtr.Zero, IntPtr.Zero);
+			Handle = yajl_alloc(gchandle.AddrOfPinnedObject(), (AllocationFunctions == null ? IntPtr.Zero : AllocationFunctions.Handle), IntPtr.Zero);
 		}
 
 		~NativeYAJLParser()

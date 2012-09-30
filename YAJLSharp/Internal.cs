@@ -46,14 +46,6 @@ namespace YAJLSharp
 		public IntPtr used;
 		public yajl_alloc_funcs *yaf;
 	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	struct yajl_alloc_funcs {
-		public IntPtr malloc; // void *, size_t
-		public IntPtr realloc; // void *, void *, size_t
-		public IntPtr free; // void *, void *
-		public IntPtr ctx;
-	}
 */
 }
 

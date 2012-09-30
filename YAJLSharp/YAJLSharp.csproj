@@ -41,5 +41,6 @@
     <Compile Include="NativeYAJLParser.cs" />
     <Compile Include="YAJLParser.cs" />
     <Compile Include="Internal.cs" />
+    <Compile Include="YAJLAllocationFunctions.cs" />
   </ItemGroup>
 </Project>
