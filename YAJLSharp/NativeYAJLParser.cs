@@ -63,7 +63,7 @@ namespace YAJLSharp
 
 	abstract unsafe public class NativeYAJLParser : IDisposable
 	{
-		public IntPtr Handle { get; protected set; }
+		public IntPtr Handle { get; private set; }
 		public IntPtr Context { get; protected set; }
 
 		[DllImport("yajl")]
