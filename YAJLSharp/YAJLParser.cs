@@ -1,9 +1,10 @@
 using System;
+using System.Text;
 using System.Runtime.InteropServices;
 
 namespace YAJLSharp
 {
-	public abstract class YAJLParser : NativeYAJLParser
+	unsafe public abstract class YAJLParser : NativeYAJLParser
 	{
 		protected override bool Number(IntPtr numberVal, IntPtr numberLen)
 		{
@@ -12,7 +13,10 @@ namespace YAJLSharp
 
 		protected virtual bool Number(string value)
 		{
-			return true;
+			var bytes = Encoding.UTF8.GetBytes(value);
+			fixed (byte *numberVal = bytes) {
+				return Number((IntPtr)numberVal, (IntPtr)bytes.Length);
+			}
 		}
 
 		protected override bool String(IntPtr stringVal, IntPtr stringLen)
@@ -22,7 +26,10 @@ namespace YAJLSharp
 
 		protected virtual bool String(string value)
 		{
-			return true;
+			var bytes = Encoding.UTF8.GetBytes(value);
+			fixed (byte *stringVal = bytes) {
+				return String((IntPtr)stringVal, (IntPtr)bytes.Length);
+			}
 		}
 
 		protected override bool MapKey(IntPtr key, IntPtr keyLen)
@@ -32,8 +39,10 @@ namespace YAJLSharp
 
 		protected virtual bool MapKey(string key)
 		{
-			return true;
+			var bytes = Encoding.UTF8.GetBytes(key);
+			fixed (byte *keyVal = bytes) {
+				return Number((IntPtr)keyVal, (IntPtr)bytes.Length);
+			}
 		}
-
 	}
 }
