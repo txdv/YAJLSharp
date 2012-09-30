@@ -204,6 +204,20 @@ namespace YAJLSharp
 			}
 		}
 
+		[DllImport("yajl")]
+		static extern int yajl_version();
+
+		static Version version;
+		static public Version Version {
+			get {
+				if (version == null) {
+					int v = yajl_version();
+					version = new Version(v / 10000, (v / 100) % 100, v % 100);
+				}
+				return version;
+			}
+		}
+
 		public virtual void Initialize()
 		{
 			if (callbacks.yajl_null    != IntPtr.Zero) base_callbacks.yajl_null    = Marshal.GetDelegateForFunctionPointer(callbacks.yajl_null,    typeof(yajl_null_delegate   )) as yajl_null_delegate;
