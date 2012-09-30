@@ -38,7 +38,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="YAJLParser.cs" />
     <Compile Include="Ensure.cs" />
+    <Compile Include="NativeYAJLParser.cs" />
+    <Compile Include="YAJLParser.cs" />
+    <Compile Include="Internal.cs" />
   </ItemGroup>
 </Project>
