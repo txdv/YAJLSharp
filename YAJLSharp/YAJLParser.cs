@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Reflection;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace YAJLSharp
@@ -23,8 +22,12 @@ namespace YAJLSharp
 
 		MethodInfo Get(MethodInfo[] methods, string name)
 		{
-			return methods.Where((m) => m.Name == name && m.GetParameters()[0].ParameterType == typeof(string))
-				.First();
+			foreach (var method in methods) {
+				if (method.Name == name && method.GetParameters()[0].ParameterType == typeof(string)) {
+					return method;
+				}
+			}
+			return null;
 		}
 
 		protected override bool Number(IntPtr numberVal, IntPtr numberLen)
