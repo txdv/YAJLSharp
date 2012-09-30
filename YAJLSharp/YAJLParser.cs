@@ -56,6 +56,14 @@ namespace YAJLSharp
 		public IntPtr ctx;
 	}
 */
+	enum yajl_option {
+		yajl_allow_comments = 0x01,
+		yajl_dont_validate_strings = 0x02,
+		yajl_allow_trailing_garbage = 0x04,
+		yajl_allow_multiple_values = 0x08,
+		yajl_allow_partial_values = 0x10
+	}
+
 	[StructLayout(LayoutKind.Sequential)]
 	struct yajl_callbacks {
 		public IntPtr yajl_null;
@@ -207,6 +215,44 @@ namespace YAJLSharp
 		public long BytesConsumed {
 			get {
 				return yajl_get_bytes_consumed(Handle).ToInt64();
+			}
+		}
+
+		[DllImport("yajl")]
+		static extern int yajl_config(IntPtr handle, yajl_option option, int value);
+
+		void yajl_config(yajl_option option, bool value)
+		{
+			yajl_config(Handle, option, (value ? 1 : 0));
+		}
+
+		public bool AllowComments {
+			set {
+				yajl_config(yajl_option.yajl_allow_comments, value);
+			}
+		}
+
+		public bool DontValidateStrings {
+			set {
+				yajl_config(yajl_option.yajl_dont_validate_strings, value);
+			}
+		}
+
+		public bool AllowTrailingGarbage {
+			set {
+				yajl_config(yajl_option.yajl_allow_trailing_garbage, value);
+			}
+		}
+
+		public bool AllowMultipleValues {
+			set {
+				yajl_config(yajl_option.yajl_allow_multiple_values, value);
+			}
+		}
+
+		public bool AllowPartialValues {
+			set {
+				yajl_config(yajl_option.yajl_allow_partial_values, value);
 			}
 		}
 
