@@ -107,7 +107,7 @@ namespace YAJLSharp
 		public yajl_end_array_delegate yajl_end_array;
 	}
 
-	abstract unsafe public class YAJLParser
+	abstract unsafe public class YAJLParser : IDisposable
 	{
 		public IntPtr Handle { get; protected set; }
 		public IntPtr Context { get; protected set; }
@@ -120,6 +120,7 @@ namespace YAJLSharp
 		yajl_sharpcallbacks base_callbacks;
 		yajl_sharpcallbacks this_callbacks;
 
+		GCHandle gchandle;
 		public YAJLParser()
 		{
 			this_callbacks.yajl_null = yajl_null;
@@ -138,8 +139,29 @@ namespace YAJLSharp
 
 			Initialize();
 
-			var gchandle = GCHandle.Alloc(callbacks, GCHandleType.Pinned);
+			gchandle = GCHandle.Alloc(callbacks, GCHandleType.Pinned);
 			Handle = yajl_alloc(gchandle.AddrOfPinnedObject(), IntPtr.Zero, IntPtr.Zero);
+		}
+
+		~YAJLParser()
+		{
+			Dispose(false);
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		protected void Dispose(bool disposing)
+		{
+			if (disposing) {
+				GC.SuppressFinalize(this);
+			}
+
+			if (gchandle.IsAllocated) {
+				gchandle.Free();
+			}
 		}
 
 		public void Parse(string text)
