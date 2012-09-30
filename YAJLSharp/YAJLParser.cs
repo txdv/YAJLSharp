@@ -170,37 +170,45 @@ namespace YAJLSharp
 			}
 		}
 
-		public void Parse(string text)
+		public bool Parse(string text)
 		{
-			Parse(System.Text.Encoding.ASCII.GetBytes(text));
+			return Parse(System.Text.Encoding.ASCII.GetBytes(text));
 		}
 
-		public void Parse(byte[] array)
+		public bool Parse(byte[] array)
 		{
-			Parse(array, 0, array.Length);
+			return Parse(array, 0, array.Length);
 		}
 
 		[DllImport("yajl")]
 		static extern yajl_status yajl_parse(IntPtr handle, IntPtr jsonText, IntPtr jsonTextLength);
 
-		public void Parse(byte[] array, int start, int count)
+		public bool Parse(byte[] array, int start, int count)
 		{
-
 			GCHandle arraygchandle = GCHandle.Alloc(array, GCHandleType.Pinned);
 			IntPtr addr = (IntPtr)(arraygchandle.AddrOfPinnedObject().ToInt64() + start);
 			var code = yajl_parse(Handle, addr, (IntPtr)count);
-			Ensure.Success(Handle, code);
+			var ret = Ensure.Success(Handle, code);
 			arraygchandle.Free();
+			return ret;
 		}
 
 		[DllImport("yajl")]
 		static extern yajl_status yajl_complete_parse(IntPtr handle);
-		public void Complete()
+		public bool Complete()
 		{
 			var code = yajl_complete_parse(Handle);
-			Ensure.Success(Handle, code);
+			return Ensure.Success(Handle, code);
 		}
-		
+
+		[DllImport("yajl")]
+		static extern IntPtr yajl_get_bytes_consumed(IntPtr ptr);
+
+		public long BytesConsumed {
+			get {
+				return yajl_get_bytes_consumed(Handle).ToInt64();
+			}
+		}
 
 		public virtual void Initialize()
 		{

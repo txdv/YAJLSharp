@@ -25,23 +25,19 @@ namespace YAJLSharp
 		[DllImport("yajl")]
 		static extern void yajl_free_error(IntPtr handle, IntPtr str);
 
-		public static void Success(IntPtr handle, yajl_status code)
+		public static bool Success(IntPtr handle, yajl_status code)
 		{
 			switch (code) {
 			case yajl_status.yajl_status_ok:
+				return true;
 			case yajl_status.yajl_status_client_canceled:
-				break;
-			case yajl_status.yajl_status_error:
+				return false;
+			default:
 				IntPtr str = yajl_get_error(handle, 1, IntPtr.Zero, IntPtr.Zero);
 				var exp = new Exception(Marshal.PtrToStringAuto(str));
 				yajl_free_error(handle, str);
 				throw exp;
 			}
-		}
-
-		public static void Success(IntPtr handle, int code)
-		{
-			Success(handle, (yajl_status)code);
 		}
 	}
 }
