@@ -151,6 +151,9 @@ namespace YAJLSharp
 			Dispose(true);
 		}
 
+		[DllImport("yajl")]
+		static extern void yajl_free(IntPtr handle);
+
 		protected void Dispose(bool disposing)
 		{
 			if (disposing) {
@@ -159,6 +162,11 @@ namespace YAJLSharp
 
 			if (gchandle.IsAllocated) {
 				gchandle.Free();
+			}
+
+			if (Handle != IntPtr.Zero) {
+				yajl_free(Handle);
+				Handle = IntPtr.Zero;
 			}
 		}
 
