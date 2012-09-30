@@ -39,5 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="YAJLParser.cs" />
+    <Compile Include="Ensure.cs" />
   </ItemGroup>
 </Project>

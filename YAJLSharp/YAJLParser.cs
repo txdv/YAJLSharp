@@ -181,22 +181,24 @@ namespace YAJLSharp
 		}
 
 		[DllImport("yajl")]
-		static extern int yajl_parse(IntPtr handle, IntPtr jsonText, IntPtr jsonTextLength);
+		static extern yajl_status yajl_parse(IntPtr handle, IntPtr jsonText, IntPtr jsonTextLength);
 
 		public void Parse(byte[] array, int start, int count)
 		{
 
 			GCHandle arraygchandle = GCHandle.Alloc(array, GCHandleType.Pinned);
 			IntPtr addr = (IntPtr)(arraygchandle.AddrOfPinnedObject().ToInt64() + start);
-			yajl_parse(Handle, addr, (IntPtr)count);
+			var code = yajl_parse(Handle, addr, (IntPtr)count);
+			Ensure.Success(Handle, code);
 			arraygchandle.Free();
 		}
 
 		[DllImport("yajl")]
-		static extern int yajl_complete_parse(IntPtr handle);
+		static extern yajl_status yajl_complete_parse(IntPtr handle);
 		public void Complete()
 		{
-			yajl_complete_parse(Handle);
+			var code = yajl_complete_parse(Handle);
+			Ensure.Success(Handle, code);
 		}
 		
 
